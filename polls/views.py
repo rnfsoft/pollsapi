@@ -1,5 +1,4 @@
-from rest_framework import viewsets
-from rest_framework.exceptions import PermissionDenied
+
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 
@@ -22,12 +21,3 @@ def polls_detail(request, pk):
     }}
     return JsonResponse(data)
 
-class PollViewSet(viewsets.ModelViewSet):
-    queryset = Poll.objects.all()
-    serializer_class = PollSerializer
-
-    def destroy(self, request, *args, **kwargs):
-        poll = Poll.objects.get(pk=self.kwargs['pk'])
-        if not request.user == poll.created_by:
-            raise PermissionDenied("You can not delete this poll")
-        return super().destory(request, *args, **kwargs)
